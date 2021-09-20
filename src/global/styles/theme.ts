@@ -1,7 +1,7 @@
 export default {
 
   colors: {
-    primary: '#778DEF',
+    primary: '#5e72e4',
     primary_light: 'rgba(119, 141, 239, 0.4)',
 
     success: '#4bc0c0',
@@ -13,7 +13,8 @@ export default {
     title: '#3e3f5e',
     subtitle: '#adafca',
     text: '#969cb2',
-    background: '#f8f8fb',
+    background: '#E5E5E5',
+    dark_bakground: '#2A4069',
   },
 
   fonts: {
