@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import { Feather } from '@expo/vector-icons';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
-import { getStatusBarHeight } from 'react-native-iphone-x-helper';
+import { getBottomSpace, getStatusBarHeight } from 'react-native-iphone-x-helper';
 
 export const Container = styled.View`
   flex: 1;
@@ -99,7 +99,7 @@ export const LastActivesContent = styled.ScrollView.attrs({
   horizontal: false,
   showsHorizontalScrollIndicator: false,
   contentContainerStyle: {
-    paddingBottom: 50,
+    paddingBottom: getBottomSpace() + 10,
   }
 })`
   padding: 0 24px;
