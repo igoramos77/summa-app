@@ -29,8 +29,7 @@ const AppRouts: React.FC = () => {
         name="Home"
         component={Dashboard}
         options={{ 
-          headerTransparent: true,
-          headerTitle: '',
+          headerShown: false,
           tabBarIcon: (({ size, color }) => (
             <Feather size={size} color={color} name="home" />
           ))
@@ -40,8 +39,7 @@ const AppRouts: React.FC = () => {
         name="Submeter Certificado"
         component={Register}
         options={{ 
-          headerTransparent: true,
-          headerTitle: '',
+          headerShown: false,
           tabBarIcon: (({ size, color }) => (
             <Feather size={size} color={color} name="send" />
           ))
@@ -51,8 +49,7 @@ const AppRouts: React.FC = () => {
         name="Meus envios"
         component={Register}
         options={{ 
-          headerTransparent: true,
-          headerTitle: '',
+          headerShown: false,
           tabBarIcon: (({ size, color }) => (
             <Feather size={size} color={color} name="list" />
           ))
