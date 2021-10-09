@@ -31,7 +31,7 @@ const AppRouts: React.FC = () => {
         options={{ 
           headerShown: false,
           tabBarIcon: (({ size, color }) => (
-            <Feather size={size} color={color} name="home" />
+            <Feather size={size} color={color} name="home" style={{ top: -6, position: 'absolute' }} />
           ))
         }}
       />
@@ -41,7 +41,7 @@ const AppRouts: React.FC = () => {
         options={{ 
           headerShown: false,
           tabBarIcon: (({ size, color }) => (
-            <Feather size={size} color={color} name="send" />
+            <Feather size={size} color={color} name="send" style={{ top: -6, position: 'absolute' }} />
           ))
         }}
       />
@@ -51,7 +51,7 @@ const AppRouts: React.FC = () => {
         options={{ 
           headerShown: false,
           tabBarIcon: (({ size, color }) => (
-            <Feather size={size} color={color} name="list" />
+            <Feather size={size} color={color} name="layers" style={{ top: -6, position: 'absolute' }} />
           ))
         }}
       />

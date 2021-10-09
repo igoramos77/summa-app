@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { Modal, Text } from 'react-native';
 
@@ -6,6 +6,7 @@ import Button from '../../Componets/Forms/Button';
 import Input from '../../Componets/Forms/Input';
 import InputCnpjMask from '../../Componets/Forms/InputCnpjMask';
 import InputSelect from '../../Componets/Forms/InputSelect';
+import InputDropZone from '../../Componets/InputDropZone';
 import { CategorySelect } from '../CategorySelect';
 
 import { Container, Header, Title, Form, Fields } from './styles';
@@ -27,6 +28,8 @@ const Register: React.FC = () => {
   function handleCloseSelectCategoryModal(){
     setCategoryModalOpen(false);
   }
+
+  const scannerRef = useRef();
  
   return (
     <Container>
@@ -40,6 +43,7 @@ const Register: React.FC = () => {
           <InputCnpjMask placeholder="CNPJ da empresa" keyboardType="number-pad" setCnpjValue={setCnpjValue} maskCnpj />
           <Input placeholder="Empresa/Instituição" editable={false} disabled />
           <Input placeholder="Carga horária (horas)" keyboardType="number-pad" />
+          <InputDropZone />
         </Fields>
 
         <Button title="Enviar certificado para análise!" background="primary" />
