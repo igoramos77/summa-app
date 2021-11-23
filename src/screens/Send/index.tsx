@@ -8,7 +8,7 @@ import { ImageManipulator } from 'expo-image-crop';
 
 const Send: React.FC = () => {
   const [image, setImage] = useState<any>(null);
-  const [uri, setUri] = useState('');
+  const [uri, setUri] = useState<string>();
   const [isVisible, setIsVisible] = useState(false);
 
   const { width, height } = Dimensions.get('window');
@@ -51,26 +51,24 @@ const Send: React.FC = () => {
     setIsVisible(!isVisible);
   }
 
-
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button title="Seleciona foto do certificado" onPress={handleImportImage} />
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-      
 
       <Button title="Selecionar pdf" onPress={handleImportPdf} />
 
       <ImageBackground
         resizeMode="contain"
         style={{justifyContent: 'center', padding: 20, alignItems: 'center', height: 150, width, backgroundColor: 'black',}}
-        source={{ uri }}
+        source={ uri }
       >
         <Button title="Open Image Editor" onPress={() => {setIsVisible(true)} } />
         <ImageManipulator
           photo={{ uri }}
           isVisible={isVisible}
-          onPictureChoosed={(uri: any) => {setUri(uri)} }
+          onPictureChoosed={(uriM: string) => {setUri(uriM)} }
           onToggleModal={onToggleModal}
+          btnTexts={{crop: 'Cortar', done: 'Salvar', processing: 'Carregando...'}}
         />
       </ImageBackground>
 

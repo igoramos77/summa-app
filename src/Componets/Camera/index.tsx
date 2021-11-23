@@ -4,8 +4,6 @@ import {StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Image}
 import {Camera} from 'expo-camera';
 import Feather from '@expo/vector-icons/build/Feather';
 
-import { CertificateGridRules } from './styles';
-
 let camera: Camera
 
 export default function App() {
@@ -80,12 +78,12 @@ export default function App() {
               style={{flex: 1}}
               ref={(r: Camera) => {camera = r}}>
               <View style={{flex: 1,width: '100%',backgroundColor: 'transparent',flexDirection: 'row'}}>
-                <CertificateGridRules />
                 <View style={{position: 'absolute', left: '4%', top: '4%', flexDirection: 'column', justifyContent: 'space-between'}}>
                   {/* @ts-ignore */}
                   <TouchableOpacity onPress={__handleFlashMode} style={{backgroundColor: '#00000030', padding: 8, borderRadius: '50%'}}>
                     {flashMode === 'off' ? 
-                      <Feather size={25} color="#fff" name="zap-off" /> :
+                      <Feather size={25} color="#fff" name="zap-off" /> 
+                    :
                       <Feather size={25} color="#fff" name="zap" /> 
                     }
                   </TouchableOpacity>
@@ -157,7 +155,7 @@ export default function App() {
           <TouchableOpacity
             onPress={__startCamera}
             style={{
-              width: 130,
+              width: 200,
               borderRadius: 4,
               backgroundColor: '#14274e',
               flexDirection: 'row',
@@ -173,7 +171,7 @@ export default function App() {
                 textAlign: 'center'
               }}
             >
-              Take picture
+              Escanear Certificado
             </Text>
           </TouchableOpacity>
         </View>

@@ -11,6 +11,7 @@ export const Container = styled.TouchableOpacity`
   justify-content: center;
   background: #fff;
   width: 100%;
+  padding: 0 8px;
   height: ${RFValue(150)}px;
   border-radius: 5px;
   border: 2px dashed ${props => props.theme.colors.subtitle};

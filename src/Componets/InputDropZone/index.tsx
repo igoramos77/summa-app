@@ -7,17 +7,24 @@ import Camera from '../Camera';
 
 import { Container, Title, TitleHeader, Icon, CloseModalButton, CloseText, Header } from './styles';
 
-const InputDropZone: React.FC = () => {
+interface IInputDropZoneProps {
+  onPress?(): void;
+  icon?: string;
+  title?: string;
+}
+
+const InputDropZone: React.FC<IInputDropZoneProps> = ({onPress, icon, title}) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Container onPress={() => {setIsOpen(true)}}>
-        <Icon name="camera" />
-        <Title>Escanear certificado</Title>
+      {/* <Container onPress={() => {setIsOpen(true)}}> */}
+      <Container onPress={onPress}>
+        <Icon name={icon ? icon : 'camera'} />
+        <Title>{title ? title : 'Anexar certificado'}</Title>
       </Container>
       {isOpen && <Modal visible={isOpen}>
-        <Header colors={['#6e61c6', '#a98ef3']} start={{ x: 0, y: 0}} end={{x: 1, y: 1}}>
-          <TitleHeader>Escanear certificado</TitleHeader>
+        <Header colors={['#6e61c6', '#a98ef3']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+          <TitleHeader>Anexar certificado</TitleHeader>
         </Header>
         <CloseModalButton onPress={() => {setIsOpen(false)}}><Feather size={22} color="#fff" name="x" /></CloseModalButton>
         <Camera />
