@@ -5,7 +5,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Dashboard from '../screens/Dashboard';
 import Register from '../screens/Register';
-import Send from '../screens/Send';
 import { Platform } from 'react-native';
 import Login from '../screens/Login';
 

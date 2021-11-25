@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Modal, Text, ActionSheetIOS, View, Image } from 'react-native';
 
 import Feather from '@expo/vector-icons/build/Feather';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as DocumentPicker from 'expo-document-picker';
 
 import Button from '../../Componets/Forms/Button';
@@ -16,7 +16,6 @@ import Camera from '../../Componets/Camera';
 import truncateStrings from '../../utils/truncateStrings';
 
 import { Container, Header, Title, Form, Fields, TitleHeader, CloseModalButton, ImageCertificate } from './styles';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Register: React.FC = () => {
 

@@ -32,7 +32,7 @@ export const H1 = styled.Text`
 `;
 
 export const Form = styled.View`
-  padding: 4px 16px;
+  padding: 4px 24px;
   margin-top: ${RFValue(-25)}px;
 `;
 

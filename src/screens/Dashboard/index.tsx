@@ -23,6 +23,8 @@ import { Container,
   LastActivesTitle,
   BtnViewMore
 } from './styles';
+import baseURL from '../../services/baseURL';
+import { useAuth } from '../../hooks/auth';
 
 interface IActivitiesProps {
   id: number;
@@ -53,6 +55,7 @@ interface IUserStatistics {
 
 
 const screens: React.FC = () => {
+  const { signOut } = useAuth();
   const [lastActivities, setLastActivities] = useState<IActivitiesProps[]>([]);
   const [userStatistics, setUserStatistics] = useState<IUserStatistics[]>([]);
 
@@ -93,7 +96,7 @@ const screens: React.FC = () => {
         {
           text: "Sair",
           onPress: () => {
-            //setShowBox(false);
+            signOut();
           },
         },
         // The "No" button
@@ -111,7 +114,7 @@ const screens: React.FC = () => {
       <Header colors={['#6e61c6', '#a98ef3']} start={{ x: 0, y: 0}} end={{x: 1, y: 1}}>
         <UserContainer>
           <UserInfo>
-            <Avatar source={{ uri: 'https://avatars.githubusercontent.com/u/60680294?v=4' }} />
+            <Avatar source={{ uri: baseURL + '/media/234cdfab-eb5a-494d-8c7d-a7d45e968a22.png' }} />
             <UserSaudation>
               <FirstSaudation>Olá, <UserName>Igor!</UserName></FirstSaudation>
               <Matricule>Matrícula: 201910906</Matricule>
