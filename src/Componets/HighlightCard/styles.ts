@@ -60,3 +60,13 @@ export const Value = styled.Text`
   flex-direction: column;
   margin-top: 20px;
 `;
+
+export const Total = styled.Text`
+  font-size: ${RFValue(16)}px;
+  font-family: ${props => props.theme.fonts.medium};
+  color: ${props => props.theme.colors.title};
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  margin-top: 20px;
+`;

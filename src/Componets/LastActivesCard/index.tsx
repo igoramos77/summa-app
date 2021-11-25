@@ -2,7 +2,8 @@ import React from 'react';
 import truncate from '../../utils/truncateStrings';
 import StatusCard from './StatusCard';
 
-import baseURL from '../../services/baseURL';
+import { format, parseISO } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 import { Text } from 'react-native';
 
@@ -12,7 +13,7 @@ interface ILastActivesCardProps {
   title: string;
   value: string | number;
   status: 'em_validação' | 'aprovado' | 'recusado';
-  date: string | Date;
+  date: string;
   certificado_img?: string;
 }
 
@@ -34,7 +35,7 @@ const LastActivesCard: React.FC<ILastActivesCardProps> = ({title, value, status,
       </Header>
       <Footer>
         <StatusCard status={status} />
-        <Date>{date}</Date>
+        <Date>{format(parseISO(date), "dd 'de' MMMM 'às' hh'h'mm", { locale: ptBR })}</Date>
       </Footer>
     </Container>
   );

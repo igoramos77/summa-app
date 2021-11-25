@@ -7,6 +7,7 @@ import Dashboard from '../screens/Dashboard';
 import Register from '../screens/Register';
 import Send from '../screens/Send';
 import { Platform } from 'react-native';
+import Login from '../screens/Login';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -48,7 +49,7 @@ const AppRouts: React.FC = () => {
       />
       <Screen
         name="Meus envios"
-        component={Send}
+        component={Login}
         options={{ 
           headerShown: false,
           tabBarIcon: (({ size, color }) => (

@@ -24,7 +24,6 @@ const bgCardVariations: tplotOptions  = {
 export const Container = styled.View<IStatusCardProps>`
   padding: 5px 8px;
   border-radius: 5px;
-  margin-top: 16px;
   ${props => bgCardVariations[props.status]};
 `;
 

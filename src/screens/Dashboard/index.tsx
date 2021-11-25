@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import { Text } from 'react-native';
 import { Alert } from 'react-native';
 
 import api from '../../services/api';
@@ -20,6 +21,7 @@ import { Container,
   CardsContainer,
   LastActivesContent,
   LastActivesTitle,
+  BtnViewMore
 } from './styles';
 
 interface IActivitiesProps {
@@ -46,9 +48,8 @@ interface IUserStatistics {
   total_atividades_submetidas: number;
   total_atividades_aguardando_validacao: number;
   total_atividades_recusadas: number;
-}
-
-
+  qtd_horas_necessarias: number;
+}[]
 
 
 const screens: React.FC = () => {
@@ -73,7 +74,7 @@ const screens: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       async function loadData() {
-        const response = await api.get('/api/v1/usuarios/2/atividades/');
+        const response = await api.get('/api/v1/usuarios/2/ultimas-atividades/');
         console.log('LIST LAST ACTIVITIES >>>>>>>>>>>>>>>>>>>');
         console.log(response.data);
         setLastActivities(response.data);
@@ -122,22 +123,23 @@ const screens: React.FC = () => {
 
       <CardsContainer>
         <HighlightCard title="Total de horas integralziadas"
-          value={125}
+          value={userStatistics[0]?.total_horas_integralizadas || 0}
           icon="send"
           background="#5ed4ac" 
+          total_horas_necessarias={userStatistics[0]?.qtd_horas_necessarias || 0}
         />
         <HighlightCard title="Atividades submetidas"
-          value={4}
+          value={userStatistics[0]?.total_atividades_submetidas || 0}
           icon="bar-chart"
           background="#fbb140"
         />
         <HighlightCard title="Aguardando validação"
-          value={2}
+          value={userStatistics[0]?.total_atividades_aguardando_validacao || 0}
           icon="clock"
           background="#1171ef"
         />
         <HighlightCard title="Atividades recusadas"
-          value={1}
+          value={userStatistics[0]?.total_atividades_recusadas || 0}
           icon="archive"
           background="#ff0004" 
         />
@@ -155,6 +157,9 @@ const screens: React.FC = () => {
             certificado_img={activitie.certificado}
           />
         ))}
+        <BtnViewMore>
+          <Text>ver todas</Text>
+        </BtnViewMore>
       </LastActivesContent>
 
     </Container>  
