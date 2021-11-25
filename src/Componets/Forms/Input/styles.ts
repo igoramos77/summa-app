@@ -14,5 +14,4 @@ export const Container = styled(TextInput)<IInputProps>`
   color: ${props => props.theme.colors.title};
   font-family: ${props => props.theme.fonts.regular};
   border-radius: 5px;
-  margin-bottom: 8px;
 `;
