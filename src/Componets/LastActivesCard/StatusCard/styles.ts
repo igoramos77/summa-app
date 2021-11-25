@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 interface IStatusCardProps {
-  status: 'in_validation' | 'approved' | 'recused';
+  status: 'em_validação' | 'aprovado' | 'recusado';
 }
 
 type tplotOptions = {
@@ -10,13 +10,13 @@ type tplotOptions = {
 }
 
 const bgCardVariations: tplotOptions  = {
-  approved: css`
+  aprovado: css`
     background: ${props => props.theme.colors.success};
   `,
-  in_validation: css`
+  em_validação: css`
     background:  ${props => props.theme.colors.warning};
   `,
-  recused: css`
+  recusado: css`
     background:  ${props => props.theme.colors.error};
   `,
 }

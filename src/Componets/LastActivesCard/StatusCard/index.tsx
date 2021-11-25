@@ -3,15 +3,15 @@ import React from 'react';
 import { Container, StatusSpan } from './styles';
 
 interface IStatusCardProps {
-  status: 'in_validation' | 'approved' | 'recused';
+  status: 'em_validação' | 'aprovado' | 'recusado';
 }
 
 const StatusCard: React.FC<IStatusCardProps> = ({status}) => {
   return (
     <Container status={status}>
-      {status === 'approved' && <StatusSpan>aprovado</StatusSpan>}
-      {status === 'in_validation' && <StatusSpan>em validação</StatusSpan>}
-      {status === 'recused' && <StatusSpan>recsuado</StatusSpan>}
+      {status === 'em_validação' && <StatusSpan>em validação</StatusSpan>}
+      {status === 'aprovado' && <StatusSpan>aprovado</StatusSpan>}
+      {status === 'recusado' && <StatusSpan>recsuado</StatusSpan>}
     </Container>
   );
 }

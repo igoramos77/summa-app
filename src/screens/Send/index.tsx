@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Image, View, Platform, Dimensions, ImageBackground} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import * as DocumentPicker from 'expo-document-picker';
 
 //@ts-ignore
 import { ImageManipulator } from 'expo-image-crop';
 
 const Send: React.FC = () => {
   const [image, setImage] = useState<any>(null);
-  const [uri, setUri] = useState<string>();
+  const [uri, setUri] = useState<any>();
   const [isVisible, setIsVisible] = useState(false);
 
   const { width, height } = Dimensions.get('window');
@@ -41,12 +40,6 @@ const Send: React.FC = () => {
     }
   }, []);
 
-  const handleImportPdf = useCallback(async() => {
-    let result = await DocumentPicker.getDocumentAsync();
-
-    console.log(result);
-  }, []);
-
   const onToggleModal = () => {
     setIsVisible(!isVisible);
   }
@@ -55,22 +48,22 @@ const Send: React.FC = () => {
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button title="Seleciona foto do certificado" onPress={handleImportImage} />
 
-      <Button title="Selecionar pdf" onPress={handleImportPdf} />
-
-      <ImageBackground
-        resizeMode="contain"
-        style={{justifyContent: 'center', padding: 20, alignItems: 'center', height: 150, width, backgroundColor: 'black',}}
-        source={ uri }
-      >
-        <Button title="Open Image Editor" onPress={() => {setIsVisible(true)} } />
-        <ImageManipulator
-          photo={{ uri }}
-          isVisible={isVisible}
-          onPictureChoosed={(uriM: string) => {setUri(uriM)} }
-          onToggleModal={onToggleModal}
-          btnTexts={{crop: 'Cortar', done: 'Salvar', processing: 'Carregando...'}}
-        />
-      </ImageBackground>
+      {uri && 
+        <ImageBackground
+          resizeMode="contain"
+          style={{justifyContent: 'center', padding: 20, alignItems: 'center', height: 150, width: 200, backgroundColor: 'black',}}
+          source={ uri }
+          >
+          <Button title="Open Image Editor" onPress={() => {setIsVisible(true)} } />
+          <ImageManipulator
+            photo={{ uri }}
+            isVisible={isVisible}
+            onPictureChoosed={(uriM: string) => {setUri(uriM)} }
+            onToggleModal={onToggleModal}
+            btnTexts={{crop: 'Cortar', done: 'Salvar', processing: 'Carregando...'}}
+          />
+        </ImageBackground>
+      }
 
     </View>
   );

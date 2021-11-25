@@ -7,6 +7,7 @@ export const Container = styled.View`
   border-radius: 5px;
   padding: 19px 23px;
   margin-top: 16px;
+  display: flex;
 `;
 
 export const Header = styled.View`
@@ -45,5 +46,3 @@ export const Status = styled.Text`
 export const Date = styled.Text`
   color: ${props => props.theme.colors.subtitle};
 `;
-
-

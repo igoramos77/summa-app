@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { Alert } from 'react-native';
+
+import api from '../../services/api';
 
 import HighlightCard from '../../Componets/HighlightCard';
 import LastActivesCard from '../../Componets/LastActivesCard';
@@ -19,30 +22,88 @@ import { Container,
   LastActivesTitle,
 } from './styles';
 
-const confirmLogout = () => {
-  return Alert.alert(
-    "Deseja descontectar do App?",
-    "Você poderá voltar quando quiser.",
-    [
-      // The "Yes" button
-      {
-        text: "Sair",
-        onPress: () => {
-          //setShowBox(false);
-        },
-      },
-      // The "No" button
-      // Does nothing but dismiss the dialog when tapped
-      {
-        text: "Não",
-      },
-    ]
-  );
-};
+interface IActivitiesProps {
+  id: number;
+  external_id: string;
+  descricao: string;
+  empresa: string;
+  cnpj: string;
+  carga_horaria_informada: number;
+  carga_horaria_integralizada?: number | null;
+  justificativa?: string | null;
+  certificado: string;
+  status: 'em_validação' | 'aprovado' | 'recusado';
+  is_active: boolean;
+  create_at: string;
+  update_at: string;
+  usuario: number;
+  curso: number;
+  categoria: number;
+}
+
+interface IUserStatistics {
+  total_horas_integralizadas: number;
+  total_atividades_submetidas: number;
+  total_atividades_aguardando_validacao: number;
+  total_atividades_recusadas: number;
+}
+
+
+
 
 const screens: React.FC = () => {
+  const [lastActivities, setLastActivities] = useState<IActivitiesProps[]>([]);
+  const [userStatistics, setUserStatistics] = useState<IUserStatistics[]>([]);
 
   const [showBox, setShowBox] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      async function loadData() {
+        const response = await api.get('api/v1/usuarios/2/total-statistics/');
+        console.log('LIST STATISTICS FROM USER >>>>>>>>>>>>>>>>>>>');
+        console.log(response.data);
+        setUserStatistics(response.data);
+      }
+      loadData();
+    }, [])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      async function loadData() {
+        const response = await api.get('/api/v1/usuarios/2/atividades/');
+        console.log('LIST LAST ACTIVITIES >>>>>>>>>>>>>>>>>>>');
+        console.log(response.data);
+        setLastActivities(response.data);
+      }
+      loadData();
+    }, [])
+  );
+
+
+  const confirmLogout = () => {
+    return Alert.alert(
+      "Deseja descontectar do App?",
+      "Você poderá voltar quando quiser.",
+      [
+        // The "Yes" button
+        {
+          text: "Sair",
+          onPress: () => {
+            //setShowBox(false);
+          },
+        },
+        // The "No" button
+        // Does nothing but dismiss the dialog when tapped
+        {
+          text: "Não",
+        },
+      ]
+    );
+  };
+  
   
   return (
     <Container>
@@ -84,36 +145,16 @@ const screens: React.FC = () => {
 
       <LastActivesTitle>Últimos Envios</LastActivesTitle>
       <LastActivesContent>
-        <LastActivesCard
-          title="Curso ReactJS"
-          value={21}
-          status="in_validation"
-          date="21/09/2021"
-        />
-        <LastActivesCard
-          title="Curso React Native"
-          value={14}
-          status="approved"
-          date="20/09/2021"
-        />
-        <LastActivesCard
-          title="Curso Django Rest Framework"
-          value={50}
-          status="recused"
-          date="15/04/2021"
-        />
-        <LastActivesCard
-          title="Curso ReactJS"
-          value={20}
-          status="approved"
-          date="20/03/2021"
-        />
-        <LastActivesCard
-          title="Curso ReactJS"
-          value={77}
-          status="approved"
-          date="12/02/2021"
-        />
+        {lastActivities.map((activitie, index) => (
+          <LastActivesCard
+            key={index}
+            title={activitie.descricao}
+            value={activitie.carga_horaria_integralizada || activitie.carga_horaria_informada}
+            status={activitie.status}
+            date={activitie.create_at}
+            certificado_img={activitie.certificado}
+          />
+        ))}
       </LastActivesContent>
 
     </Container>  
