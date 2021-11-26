@@ -38,7 +38,7 @@ export const Category = styled.TouchableOpacity.attrs({
   flex-direction: row;
   align-items: center;
   background-color: ${({ isActive }) =>
-    isActive ? '#ddd' : theme.colors.shape
+    isActive ? '#b3b9f7' : theme.colors.shape
   };
 `;
 

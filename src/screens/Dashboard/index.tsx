@@ -21,7 +21,8 @@ import { Container,
   CardsContainer,
   LastActivesContent,
   LastActivesTitle,
-  BtnViewMore
+  BtnViewMore,
+  NotFound
 } from './styles';
 import baseURL from '../../services/baseURL';
 import { useAuth } from '../../hooks/auth';
@@ -163,21 +164,25 @@ const screens: React.FC = () => {
       </CardsContainer>
 
       <LastActivesTitle>Últimos Envios</LastActivesTitle>
-      <LastActivesContent>
-        {lastActivities.map((activitie, index) => (
-          <LastActivesCard
-            key={index}
-            title={activitie.descricao}
-            value={activitie.carga_horaria_integralizada || activitie.carga_horaria_informada}
-            status={activitie.status}
-            date={activitie.create_at}
-            certificado_img={activitie.certificado}
-          />
-        ))}
-        <BtnViewMore>
-          <Text>ver todas</Text>
-        </BtnViewMore>
-      </LastActivesContent>
+      {userStatistics[0]?.total_horas_integralizadas > 0 ? 
+        <LastActivesContent>
+          {lastActivities.map((activitie, index) => (
+            <LastActivesCard
+              key={index}
+              title={activitie.descricao}
+              value={activitie.carga_horaria_integralizada || activitie.carga_horaria_informada}
+              status={activitie.status}
+              date={activitie.create_at}
+              certificado_img={activitie.certificado}
+            />
+          ))}
+          <BtnViewMore>
+            <Text>ver todas</Text>
+          </BtnViewMore>
+        </LastActivesContent>
+      :
+        <NotFound>Poxa, você ainda não submeteu nenhuma atividade 😢</NotFound>
+      }
 
     </Container>  
   );

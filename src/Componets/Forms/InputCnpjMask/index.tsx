@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextInputProps } from 'react-native';
+import { Alert, TextInputProps } from 'react-native';
 
 import { Container } from './styles';
 
@@ -9,9 +9,11 @@ interface IInputProps extends TextInputProps {
   disabled?: boolean;
   maskCnpj?: boolean;
   setCnpjValue(value: any): void;
+  setCnpjIsFull(value: boolean): void;
 }
 
-const InputCnpjMask: React.FC<IInputProps> = ({disabled, maskCnpj, setCnpjValue, ...rest}) => {
+const InputCnpjMask: React.FC<IInputProps> = ({disabled, maskCnpj, setCnpjValue, setCnpjIsFull, ...rest}) => {
+  //const [cnpjIsFull, setCnpjIsFull] = useState(false);
 
   return (
     <Container
@@ -20,7 +22,9 @@ const InputCnpjMask: React.FC<IInputProps> = ({disabled, maskCnpj, setCnpjValue,
       placeholderTextColor="#c3c3c3"
       onChangeText={(value) => {
         setCnpjValue(cnpjMask(value));
-        alert(value)
+        if(value.length === 18) {
+          setCnpjIsFull(true);
+        }
       }}
     />
   );

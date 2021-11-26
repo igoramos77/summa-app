@@ -106,7 +106,6 @@ export const LastActivesContent = styled.ScrollView.attrs({
   padding: 0 24px;
 `;
 
-
 export const BtnViewMore = styled(TouchableOpacity)`
   background: #ccc;
   width: 100%;
@@ -116,4 +115,14 @@ export const BtnViewMore = styled(TouchableOpacity)`
   padding: 16px;
   margin-top: 16px;
   border-radius: 5px;
+`;
+
+export const NotFound = styled.Text`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  text-align: center;
+  color: ${props => props.theme.colors.title};
 `;

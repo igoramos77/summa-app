@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Modal, Text, ActionSheetIOS, View, Image } from 'react-native';
+import { Modal, Text, ActionSheetIOS, View, Image, Alert } from 'react-native';
 
 import Feather from '@expo/vector-icons/build/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -23,10 +23,15 @@ export interface IPhotoCameraProps {
 }
 
 import { Container, Header, Title, Form, FormControl, Fields, TitleHeader, CloseModalButton, ImageCertificate } from './styles';
+import axios from 'axios';
 
 const Register: React.FC = () => {
 
+  const [empresa, setEmpresa] = useState('');
   const [cnpjValue, setCnpjValue] = useState('');
+  
+  const [cnpjIsFull, setCnpjIsFull] = useState(false);
+  const [cnpjIsValid, setCnpjIsValid] = useState(false);
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
 
   const [attached, setAttached] = useState(false);
@@ -89,8 +94,29 @@ const Register: React.FC = () => {
     }
   );
 
+  useEffect(() => {
+    if(cnpjIsFull) {
+      async function loadData() {
+        try {
+          const response = await axios.get(`https://minhareceita.org/${cnpjValue}`)
+          console.log(response.data);
+          setCnpjIsValid(true);
+          setEmpresa(response.data.nome_fantasia);
+        } catch (error) {
+          console.log(error);
+          Alert.alert('CNPJ inválido! 😢');
+          setCnpjIsFull(false);
+          setCnpjValue('');
+          setCnpjIsValid(false);
+        }
+      }
+
+      loadData();
+    }
+  }, [cnpjIsFull]);
+
   const getImageData = async () => {
-    console.log('entrou');
+    //console.log('entrou');
     try {
       const value = await AsyncStorage.getItem('@summaLastCertificate')
       if(value !== null) {
@@ -122,10 +148,21 @@ const Register: React.FC = () => {
               <InputSelect title={category.display} onPress={handleOpenSelectCategoryModal} />
             </FormControl>
             <FormControl>
-              <InputCnpjMask placeholder="CNPJ da empresa" keyboardType="number-pad" setCnpjValue={setCnpjValue} maskCnpj />
+              <InputCnpjMask 
+                placeholder="CNPJ da empresa" 
+                value={cnpjValue}
+                setCnpjValue={setCnpjValue} 
+                setCnpjIsFull={setCnpjIsFull}
+                keyboardType="number-pad"
+                maxLength={18} //cnpj length with points
+                maskCnpj 
+                editable={(cnpjIsFull && cnpjIsValid && cnpjValue.length ===18 )? false : true}
+                disabled={(cnpjIsFull && cnpjIsValid && cnpjValue.length ===18 )? true : false}
+              />
+              {cnpjIsValid && cnpjIsFull && <Feather size={24} color="#36b877" name="check" style={{ position: 'absolute', zIndex: 99999, right: 16 }} />}
             </FormControl>
             <FormControl>
-              <Input placeholder="Empresa/Instituição" editable={false} disabled />
+              <Input placeholder="Empresa/Instituição" value={empresa} editable={false} disabled />
             </FormControl>
             <FormControl>
               <Input placeholder="Carga horária (horas)" keyboardType="number-pad" />
