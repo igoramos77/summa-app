@@ -4,6 +4,7 @@ import { Modal, Text, ActionSheetIOS, View, Image } from 'react-native';
 import Feather from '@expo/vector-icons/build/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as DocumentPicker from 'expo-document-picker';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import Button from '../../Componets/Forms/Button';
 import Input from '../../Componets/Forms/Input';
@@ -15,7 +16,13 @@ import Camera from '../../Componets/Camera';
 
 import truncateStrings from '../../utils/truncateStrings';
 
-import { Container, Header, Title, Form, Fields, TitleHeader, CloseModalButton, ImageCertificate } from './styles';
+export interface IPhotoCameraProps {
+  height: number;
+  uri: string;
+  width: number;
+}
+
+import { Container, Header, Title, Form, FormControl, Fields, TitleHeader, CloseModalButton, ImageCertificate } from './styles';
 
 const Register: React.FC = () => {
 
@@ -26,12 +33,13 @@ const Register: React.FC = () => {
   const [attachedName, setAttachedName] = useState('');
 
   const [isOpen, setIsOpen] = useState(false);
+  const [currentPhoto, setCurrentPhoto] = useState<IPhotoCameraProps>({} as IPhotoCameraProps);
 
   const [lastCertificateImg, setLastCertificateImg] = useState('');
 
   const [category, setCategory] = useState({
     value: Number,
-    label: 'Categoria'
+    display: 'Categoria'
   });
 
   function handleOpenSelectCategoryModal(){
@@ -98,27 +106,41 @@ const Register: React.FC = () => {
   useEffect(() => {
     getImageData();
   }, [getImageData]);
-  
     
   return (
     <Container>
       <Header colors={['#6e61c6', '#a98ef3']} start={{ x: 0, y: 0}} end={{x: 1, y: 1}}>
         <Title>Cadastrar atividade complementar</Title>
       </Header>
-      <Form>
-        <Fields>
-          <Input placeholder="Descrição" />
-          <InputSelect title={category.label} onPress={handleOpenSelectCategoryModal} />
-          <InputCnpjMask placeholder="CNPJ da empresa" keyboardType="number-pad" setCnpjValue={setCnpjValue} maskCnpj />
-          <Input placeholder="Empresa/Instituição" editable={false} disabled />
-          <Input placeholder="Carga horária (horas)" keyboardType="number-pad" />
-          <InputDropZone onPress={handleOpenMenu} icon={attached ? 'file' : 'camera'} title={attached ? truncateStrings(attachedName, 60) : ''}>
-            {lastCertificateImg && <ImageCertificate source={{ uri: lastCertificateImg }} />}
-          </InputDropZone>
-        </Fields>
+      <KeyboardAwareScrollView extraHeight={150}>
+        <Form>
+          <Fields>
+            <FormControl>
+              <Input placeholder="Descrição" />
+            </FormControl>
+            <FormControl>
+              <InputSelect title={category.display} onPress={handleOpenSelectCategoryModal} />
+            </FormControl>
+            <FormControl>
+              <InputCnpjMask placeholder="CNPJ da empresa" keyboardType="number-pad" setCnpjValue={setCnpjValue} maskCnpj />
+            </FormControl>
+            <FormControl>
+              <Input placeholder="Empresa/Instituição" editable={false} disabled />
+            </FormControl>
+            <FormControl>
+              <Input placeholder="Carga horária (horas)" keyboardType="number-pad" />
+            </FormControl>
+            <FormControl>
+              <Text>uri :::::: {currentPhoto.uri}</Text>
+              <InputDropZone onPress={handleOpenMenu} icon={attached ? 'file' : 'camera'} title={attached ? truncateStrings(attachedName, 60) : ''}>
+                {lastCertificateImg && <ImageCertificate source={{ uri: lastCertificateImg }} />}
+              </InputDropZone>
+            </FormControl>
+          </Fields>
 
-        <Button title="Enviar certificado para análise!" background="primary" />
-      </Form>
+          <Button title="Enviar certificado para análise!" background="primary" />
+        </Form>
+      </KeyboardAwareScrollView>
 
       <Modal visible={categoryModalOpen}>
         <CategorySelect

@@ -21,10 +21,15 @@ export const Form = styled.View`
   justify-content: space-between;
 `;
 
+export const FormControl = styled.View`
+  margin: ${RFValue(4)}px 0;
+  display: flex;
+  justify-content: center;
+`;
+
 export const Fields = styled.View`
 
 `;
-
 
 export const TitleHeader = styled.Text`
   display: flex;
@@ -67,7 +72,6 @@ export const Header = styled(LinearGradient)`
   padding-bottom: 20px;
   color: #ffffff;
 `;
-
 
 export const ImageCertificate = styled.Image`
   transform: rotate(-90deg);

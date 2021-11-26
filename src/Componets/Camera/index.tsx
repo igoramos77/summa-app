@@ -31,10 +31,13 @@ export default function App({setIsOpen}: IAppProps) {
   }
 
   const __takePicture = async () => {
+    
+    setTimeout(() => {
+      setPreviewVisible(true);
+    }, 1);
+
     const photo: any = await camera.takePictureAsync();
     console.log(photo);
-    setPreviewVisible(true);
-    //setStartCamera(false);
     setCapturedImage(photo);
   }
 
@@ -197,7 +200,7 @@ const styles = StyleSheet.create({
   }
 })
 
-const CameraPreview = ({photo, retakePicture, savePhoto, setIsOpen}: any) => {
+const CameraPreview = ({photo, retakePicture, savePhoto, setIsOpen, setCurrentPhoto}: any) => {
   console.log('photo: ', photo);
 
   const storeImageData = async (photo: string) => {
@@ -205,6 +208,7 @@ const CameraPreview = ({photo, retakePicture, savePhoto, setIsOpen}: any) => {
       await AsyncStorage.setItem('@summaLastCertificate', photo);
       console.log('Last uri certificate save in storage!');
       setIsOpen(false);
+      setCurrentPhoto(photo);
     } catch (e) {
       // saving error
       console.log(e);

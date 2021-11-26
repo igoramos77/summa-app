@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { Text } from 'react-native';
 import { Alert } from 'react-native';
