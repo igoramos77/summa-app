@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { Text } from 'react-native';
 import { Alert } from 'react-native';
@@ -53,10 +54,24 @@ interface IUserStatistics {
   qtd_horas_necessarias: number;
 }[]
 
+interface IUserProps {
+  user: {
+    id: string,
+    first_name: string,
+    last_name: string,
+    matricula: string,
+    email: string,
+    foto: string,
+    curso: string,
+    token: string,
+  }
+}
+
 
 const screens: React.FC = () => {
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const [lastActivities, setLastActivities] = useState<IActivitiesProps[]>([]);
+  //const [currentUser, setCurrentUser] = useState({} as IUserProps);
   const [userStatistics, setUserStatistics] = useState<IUserStatistics[]>([]);
 
   const [showBox, setShowBox] = useState(true);
@@ -65,7 +80,7 @@ const screens: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       async function loadData() {
-        const response = await api.get('api/v1/usuarios/2/total-statistics/');
+        const response = await api.get(`api/v1/usuarios/${user.id}/total-statistics/`);
         console.log('LIST STATISTICS FROM USER >>>>>>>>>>>>>>>>>>>');
         console.log(response.data);
         setUserStatistics(response.data);
@@ -77,7 +92,7 @@ const screens: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       async function loadData() {
-        const response = await api.get('/api/v1/usuarios/2/ultimas-atividades/');
+        const response = await api.get(`/api/v1/usuarios/${user.id}/ultimas-atividades/`);
         console.log('LIST LAST ACTIVITIES >>>>>>>>>>>>>>>>>>>');
         console.log(response.data);
         setLastActivities(response.data);
@@ -114,10 +129,10 @@ const screens: React.FC = () => {
       <Header colors={['#6e61c6', '#a98ef3']} start={{ x: 0, y: 0}} end={{x: 1, y: 1}}>
         <UserContainer>
           <UserInfo>
-            <Avatar source={{ uri: baseURL + '/media/234cdfab-eb5a-494d-8c7d-a7d45e968a22.png' }} />
+            <Avatar source={user.foto ? { uri: user.foto } : { uri: baseURL + '/media/default-avatar.jpg' }} />
             <UserSaudation>
-              <FirstSaudation>Olá, <UserName>Igor!</UserName></FirstSaudation>
-              <Matricule>Matrícula: 201910906</Matricule>
+              {user.first_name && <FirstSaudation>Olá, <UserName>{user.first_name}!</UserName></FirstSaudation>}
+              {user.matricula && <Matricule>Matrícula: {user.matricula}</Matricule>}
             </UserSaudation>
           </UserInfo>
           <Icon name="power" onPress={confirmLogout} />
