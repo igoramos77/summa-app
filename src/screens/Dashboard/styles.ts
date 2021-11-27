@@ -30,8 +30,27 @@ export const UserContainer = styled.View`
   margin-top: ${getStatusBarHeight() + RFValue(40)}px;
 `;
 
-export const UserInfo = styled.View`
+export const UserInfo = styled(TouchableOpacity)`
   flex-direction: row;
+  align-items: center;
+`;
+
+export const CloseModal = styled.View`
+  top: 60px;
+  position: absolute;
+  left: 20;
+  width: 50px;
+  height: 50px;
+  z-index: 9999;
+`;
+
+export const CloseModalBtn = styled(TouchableOpacity)`
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  background: #ffffff20;
+  display: flex;
+  justify-content: center;
   align-items: center;
 `;
 

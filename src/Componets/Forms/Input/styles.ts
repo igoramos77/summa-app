@@ -4,14 +4,15 @@ import { RFValue } from 'react-native-responsive-fontsize';
 
 interface IInputProps extends TextInputProps {
   disabled?: boolean;
+  background?: string;
 }
 
 export const Container = styled(TextInput)<IInputProps>`
   width: 100%;
   padding: 20px 16px;
   font-size: ${RFValue(12)}px;
-  background: ${props => props.disabled ? '#D8D9DB' : props.theme.colors.shape};
-  color: ${props => props.theme.colors.title};
+  background: ${props => props.disabled ? '#E5E5E5' : props.theme.colors.shape};
+  color: ${props => props.disabled ? '#969CB2' : props.theme.colors.text};
   font-family: ${props => props.theme.fonts.regular};
   border-radius: 5px;
 `;

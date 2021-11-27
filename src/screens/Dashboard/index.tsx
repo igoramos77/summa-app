@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { Text } from 'react-native';
-import { Alert } from 'react-native';
+import { Text, Alert, Modal } from 'react-native';
 
 import api from '../../services/api';
 
 import HighlightCard from '../../Componets/HighlightCard';
 import LastActivesCard from '../../Componets/LastActivesCard';
+import Profile from '../Profile';
 
 import { Container,
   Header,
@@ -22,10 +22,14 @@ import { Container,
   LastActivesContent,
   LastActivesTitle,
   BtnViewMore,
-  NotFound
+  NotFound,
+  CloseModal,
+  CloseModalBtn
 } from './styles';
+
 import baseURL from '../../services/baseURL';
 import { useAuth } from '../../hooks/auth';
+import Feather from '@expo/vector-icons/build/Feather';
 
 interface IActivitiesProps {
   id: number;
@@ -71,11 +75,9 @@ interface IUserProps {
 const screens: React.FC = () => {
   const { signOut, user } = useAuth();
   const [lastActivities, setLastActivities] = useState<IActivitiesProps[]>([]);
-  //const [currentUser, setCurrentUser] = useState({} as IUserProps);
   const [userStatistics, setUserStatistics] = useState<IUserStatistics[]>([]);
 
-  const [showBox, setShowBox] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [profileIsVisible, setProfileIsVisible] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -123,17 +125,24 @@ const screens: React.FC = () => {
     );
   };
   
-  
   return (
     <Container>
       <Header colors={['#6e61c6', '#a98ef3']} start={{ x: 0, y: 0}} end={{x: 1, y: 1}}>
         <UserContainer>
-          <UserInfo>
+          <UserInfo onPress={() => setProfileIsVisible(true)}>
             <Avatar source={user.foto ? { uri: user.foto } : { uri: baseURL + '/media/default-avatar.jpg' }} />
             <UserSaudation>
               {user.first_name && <FirstSaudation>Olá, <UserName>{user.first_name}!</UserName></FirstSaudation>}
               {user.matricula && <Matricule>Matrícula: {user.matricula}</Matricule>}
             </UserSaudation>
+            <Modal visible={profileIsVisible} >
+            <CloseModal>
+              <CloseModalBtn onPress={() => setProfileIsVisible(false)}>
+                <Feather size={22} color="#fff" name="x" />
+              </CloseModalBtn>
+            </CloseModal>
+              <Profile />
+            </Modal>
           </UserInfo>
           <Icon name="power" onPress={confirmLogout} />
         </UserContainer>
@@ -183,7 +192,7 @@ const screens: React.FC = () => {
       :
         <NotFound>Poxa, você ainda não submeteu nenhuma atividade 😢</NotFound>
       }
-
+      
     </Container>  
   );
 }
