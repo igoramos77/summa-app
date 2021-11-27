@@ -27,7 +27,7 @@ export interface IPhotoCameraProps {
   width: number;
 }
 
-import { Container, Header, Title, Form, FormControl, Fields, TitleHeader, CloseModalButton, ImageCertificate } from './styles';
+import { Container, Header, TitleHeader, Title, Form, FormControl, Fields, CloseModalButton, ImageCertificate } from './styles';
 
 const Register: React.FC = () => {
   const { user } = useAuth();

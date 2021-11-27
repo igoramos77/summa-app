@@ -1,7 +1,8 @@
 import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export const Container = styled.View`
+export const Container = styled(TouchableOpacity)`
   position: relative;
   background: ${props => props.theme.colors.shape};
   border-radius: 5px;

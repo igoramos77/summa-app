@@ -32,14 +32,6 @@ export const Fields = styled.View`
 
 `;
 
-export const TitleHeader = styled.Text`
-  display: flex;
-  text-align: center;
-  width: 100%;
-  color: #fff;
-  font-family: ${props => props.theme.fonts.bold};
-  font-size: ${RFValue(16)}px;
-`;
 
 export const CloseModalButton = styled.TouchableOpacity`
   position: absolute;
@@ -72,6 +64,15 @@ export const Header = styled(LinearGradient)`
   justify-content: flex-end;
   padding-bottom: 20px;
   color: #ffffff;
+`;
+
+export const TitleHeader = styled.Text`
+  display: flex;
+  text-align: center;
+  width: 100%;
+  color: #fff;
+  font-family: ${props => props.theme.fonts.bold};
+  font-size: ${RFValue(16)}px;
 `;
 
 export const ImageCertificate = styled.Image`

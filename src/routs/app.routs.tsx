@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Dashboard from '../screens/Dashboard';
 import Register from '../screens/Register';
 import { Platform } from 'react-native';
-import Profile from '../screens/Profile';
+import MySends from '../screens/MySends';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -48,7 +48,7 @@ const AppRouts: React.FC = () => {
       />
       <Screen
         name="Meus envios"
-        component={Profile}
+        component={MySends}
         options={{ 
           headerShown: false,
           tabBarIcon: (({ size, color }) => (

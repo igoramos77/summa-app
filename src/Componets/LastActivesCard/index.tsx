@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Feather } from '@expo/vector-icons';
 import truncate from '../../utils/truncateStrings';
 import StatusCard from './StatusCard';
 
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-import { Text } from 'react-native';
+import { Modal, Text } from 'react-native';
 
 import { Container, Header, Title, Value, Footer, Status, Date } from './styles';
+import { CloseModal, CloseModalBtn } from '../../screens/Dashboard/styles';
+import ActivePreview from '../ActivePreview';
 
 interface ILastActivesCardProps {
   title: string;
@@ -27,17 +30,29 @@ const extensionIsImage = (value: string) => {
 }
 
 const LastActivesCard: React.FC<ILastActivesCardProps> = ({title, value, status, date, certificado_img}) => {
+  const [modalIsVisible, setmodalIsVisible] = useState(false);
+
   return (
-    <Container>
-      <Header>
-        <Title>{truncate(title, 24)}</Title>
-        {value > 1 ? <Value>{value} horas</Value> : <Value>{value} hora</Value>}
-      </Header>
-      <Footer>
-        <StatusCard status={status} />
-        <Date>{format(parseISO(date), "dd 'de' MMMM 'às' hh'h'mm", { locale: ptBR })}</Date>
-      </Footer>
-    </Container>
+    <>
+      <Container onPress={() => {setmodalIsVisible(true)}}>
+        <Header>
+          <Title>{truncate(title, 24)}</Title>
+          {value > 1 ? <Value>{value} horas</Value> : <Value>{value} hora</Value>}
+        </Header>
+        <Footer>
+          <StatusCard status={status} />
+          <Date>{format(parseISO(date), `dd LLL',' hh':'mm`, { locale: ptBR })}</Date>
+        </Footer>
+      </Container>
+      {/* <Modal visible={modalIsVisible} >
+        <CloseModal>
+          <CloseModalBtn onPress={() => setmodalIsVisible(false)}>
+            <Feather size={22} color="#fff" name="chevron-left" />
+          </CloseModalBtn>
+        </CloseModal>
+        <ActivePreview />
+      </Modal> */}
+    </>
   );
 }
 

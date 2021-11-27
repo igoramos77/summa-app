@@ -72,7 +72,7 @@ interface IUserProps {
 }
 
 
-const screens: React.FC = () => {
+const Dashboard: React.FC = () => {
   const { signOut, user } = useAuth();
   const [lastActivities, setLastActivities] = useState<IActivitiesProps[]>([]);
   const [userStatistics, setUserStatistics] = useState<IUserStatistics[]>([]);
@@ -136,11 +136,11 @@ const screens: React.FC = () => {
               {user.matricula && <Matricule>Matrícula: {user.matricula}</Matricule>}
             </UserSaudation>
             <Modal visible={profileIsVisible} >
-            <CloseModal>
-              <CloseModalBtn onPress={() => setProfileIsVisible(false)}>
-                <Feather size={22} color="#fff" name="x" />
-              </CloseModalBtn>
-            </CloseModal>
+              <CloseModal>
+                <CloseModalBtn onPress={() => setProfileIsVisible(false)}>
+                  <Feather size={22} color="#fff" name="x" />
+                </CloseModalBtn>
+              </CloseModal>
               <Profile />
             </Modal>
           </UserInfo>
@@ -197,4 +197,4 @@ const screens: React.FC = () => {
   );
 }
 
-export default screens;
+export default Dashboard;

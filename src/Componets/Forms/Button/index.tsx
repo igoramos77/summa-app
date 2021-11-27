@@ -2,6 +2,8 @@ import { isLoading } from 'expo-font';
 import React from 'react';
 import { ActivityIndicator, TouchableOpacityProps } from 'react-native';
 
+import Feather from '@expo/vector-icons/build/Feather';
+
 import { Container, Text } from './styles';
 
 interface IButtonProps extends TouchableOpacityProps {

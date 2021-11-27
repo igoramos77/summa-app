@@ -162,26 +162,31 @@ export default function App({setIsOpen, setCurrentCertificateObj}: IAppProps) {
             flex: 1,
             backgroundColor: '#fff',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            flexDirection: 'column'
           }}
         >
           <TouchableOpacity
             onPress={__startCamera}
             style={{
-              width: 200,
+              width: 250,
               borderRadius: 4,
-              backgroundColor: '#14274e',
+              backgroundColor: '#5E72E4',
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              height: 40
+              height: 60
             }}
           >
+            
             <Text
               style={{
                 color: '#fff',
                 fontWeight: 'bold',
-                textAlign: 'center'
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                
               }}
             >
               Escanear Certificado
