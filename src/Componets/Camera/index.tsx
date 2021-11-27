@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Image} from 'react-native';
+import {LogBox, StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Image} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 
 import {Camera} from 'expo-camera';
@@ -12,6 +12,9 @@ interface IAppProps {
   setIsOpen(value: boolean): any;
   setCurrentCertificateObj(value: any): any;
 }
+
+// Ignore all log notifications:
+LogBox.ignoreAllLogs();
 
 export default function App({setIsOpen, setCurrentCertificateObj}: IAppProps) {
   const [startCamera, setStartCamera] = React.useState(false);
@@ -206,13 +209,6 @@ const CameraPreview = ({photo, retakePicture, savePhoto, setIsOpen, setCurrentCe
 
   const storeImageData = async (photo: any) => {
     try {
-      await AsyncStorage.setItem('@summaLastCertificate', JSON.stringify(photo));
-      console.log('=============================================');
-      console.log('=============================================');
-      console.log('=============================================');
-      console.log('=============================================');
-      console.log(await AsyncStorage.getItem('@summaLastCertificate'));
-      console.log('Last uri certificate save in storage!');
       setIsOpen(false);
       setCurrentCertificateObj(photo)
     } catch (e) {

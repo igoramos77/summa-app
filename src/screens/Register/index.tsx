@@ -28,12 +28,11 @@ import { useIsFocused } from '@react-navigation/native';
 import api from '../../services/api';
 import { useAuth } from '../../hooks/auth';
 
-import convertBlobToBase64 from '../../utils/base64toImage';
-
 const Register: React.FC = () => {
   const { user } = useAuth();
   // This hook returns `true` if the screen is focused, `false` otherwise
   const isFocused = useIsFocused();
+  const [loading, setLoading] = useState(false);
 
   const [descricao, setDescricao] = useState('');
   
@@ -51,7 +50,6 @@ const Register: React.FC = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [currentCertificateObj, setCurrentCertificateObj] = React.useState<any>();
-  const [currentPhoto, setCurrentPhoto] = useState<IPhotoCameraProps>({} as IPhotoCameraProps);
 
   const [lastCertificateImg, setLastCertificateImg] = useState<any>();
 
@@ -109,26 +107,10 @@ const Register: React.FC = () => {
   );
 
   const handleCleanForm = useCallback(() => {
-    //limpa a img do storage
-    const removeImageDataFromStorage = async () => {
-      console.log('entrou aqui!');
-      try {
-        await AsyncStorage.removeItem('@summaLastCertificate')
-        console.log('img storage removed!');
-
-        // seta o valor do stado da ultima img para null/empty
-        setLastCertificateImg('');
-        setDescricao('');
-        setAttached(false);
-        setAttachedName('');
-      } catch(e) {
-        // error reading value
-        console.log(e);
-      }
-    }
-    //chama a funcao acima
-    removeImageDataFromStorage();
-
+    console.log('entrou aqui!');
+    setLastCertificateImg('');
+    setDescricao('');
+    setAttached(false);
   }, []);
 
   useEffect(() => {
@@ -152,43 +134,34 @@ const Register: React.FC = () => {
     }
   }, [cnpjIsFull]);
 
-  const getImageData = useCallback(async() => {
-    try {
-      const value = await AsyncStorage.getItem('@summaLastCertificate');
-      if(value !== null) {
-        // value previously stored
-        setLastCertificateImg(JSON.parse(value));
-        console.log('img:::::', value)
-      } else {
-        console.log('n entrou');
-      }
-    } catch(e) {
-      // error reading value
-      console.log(e);
-    }
-  }, []);
-
-  useEffect(() => {
-    getImageData();
-  }, [getImageData]);
-
   useEffect(() => {
     if (isFocused) {
-      alert('entrou na tela de cadastro');
+      //alert('entrou na tela de cadastro');
       
     } else {
-      alert('saiu: limpar todos os dados do form');
+      //alert('saiu: limpar todos os dados do form');
       handleCleanForm();
     }
   }, [isFocused, handleCleanForm]);
+
+  const handleValidateForm = useCallback(() => {
+    setLoading(true);
+    if(empresa === '' || descricao === '' || cnpjValue === '' || cargaHoraria === '' || currentCertificateObj === undefined || category.value === null) {
+      Alert.alert('Você esqueceu de preencher algum campo. 😢');
+      setLoading(false);
+      return;
+    } else {
+      Alert.alert('OK!');
+      setLoading(false);
+    }
+
+  }, [empresa, descricao, cnpjValue, cargaHoraria, currentCertificateObj , category]);
 
   
   const handleSubmitForm = useCallback(async() => {
     const ext = currentCertificateObj.uri.split('.')[1];
     const final = {...currentCertificateObj, name: 'file.' + ext} 
     console.log(final);
-    console.log('submit form:');
-    console.log(final)
 
     const formdata = new FormData();
     formdata.append("descricao", descricao);
@@ -262,7 +235,7 @@ const Register: React.FC = () => {
           </Fields>
 
           <FormControl>
-            <Button title="Enviar atividade para análise!" background="primary" onPress={handleSubmitForm} />
+            <Button title="Enviar atividade para análise!" background="primary" onPress={handleValidateForm} loading={loading} />
           </FormControl>
         </Form>
       </KeyboardAwareScrollView>
