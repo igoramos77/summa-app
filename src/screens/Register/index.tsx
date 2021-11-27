@@ -1,8 +1,13 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Modal, Text, ActionSheetIOS, View, Image, Alert } from 'react-native';
+import { Modal, ActionSheetIOS, Alert } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
+
+import { useAuth } from '../../hooks/auth';
+
+import api from '../../services/api';
+import axios from 'axios';
 
 import Feather from '@expo/vector-icons/build/Feather';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as DocumentPicker from 'expo-document-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -23,15 +28,13 @@ export interface IPhotoCameraProps {
 }
 
 import { Container, Header, Title, Form, FormControl, Fields, TitleHeader, CloseModalButton, ImageCertificate } from './styles';
-import axios from 'axios';
-import { useIsFocused } from '@react-navigation/native';
-import api from '../../services/api';
-import { useAuth } from '../../hooks/auth';
 
 const Register: React.FC = () => {
   const { user } = useAuth();
   // This hook returns `true` if the screen is focused, `false` otherwise
   const isFocused = useIsFocused();
+  const [theKey, setTheKey] = useState(0);
+
   const [loading, setLoading] = useState(false);
 
   const [descricao, setDescricao] = useState('');
@@ -49,12 +52,10 @@ const Register: React.FC = () => {
   const [attachedName, setAttachedName] = useState('');
 
   const [isOpen, setIsOpen] = useState(false);
-  const [currentCertificateObj, setCurrentCertificateObj] = React.useState<any>();
-
-  const [lastCertificateImg, setLastCertificateImg] = useState<any>();
+  const [currentCertificateObj, setCurrentCertificateObj] = useState<any>();
 
   const [category, setCategory] = useState({
-    value: Number,
+    value: '',
     display: 'Categoria'
   });
 
@@ -106,11 +107,17 @@ const Register: React.FC = () => {
     }
   );
 
-  const handleCleanForm = useCallback(() => {
-    console.log('entrou aqui!');
-    setLastCertificateImg('');
+  const handleClearForm = useCallback(() => {
+    console.log('DEVE LIMPAR O FORM!');
     setDescricao('');
+    setCategory({...category});
+    setEmpresa('');
+    setCnpjValue('');
+    setCnpjIsValid(false);
+    setCnpjIsFull(false);
     setAttached(false);
+    setCurrentCertificateObj(undefined);
+    setCargaHoraria('');
   }, []);
 
   useEffect(() => {
@@ -134,28 +141,31 @@ const Register: React.FC = () => {
     }
   }, [cnpjIsFull]);
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (isFocused) {
       //alert('entrou na tela de cadastro');
       
     } else {
       //alert('saiu: limpar todos os dados do form');
-      handleCleanForm();
+      handleClearForm();
     }
-  }, [isFocused, handleCleanForm]);
+  }, [isFocused, handleClearForm]); */
 
   const handleValidateForm = useCallback(() => {
     setLoading(true);
-    if(empresa === '' || descricao === '' || cnpjValue === '' || cargaHoraria === '' || currentCertificateObj === undefined || category.value === null) {
-      Alert.alert('Você esqueceu de preencher algum campo. 😢');
-      setLoading(false);
-      return;
-    } else {
-      Alert.alert('OK!');
-      setLoading(false);
-    }
+    setTimeout(() => {
+      if(empresa === '' || descricao === '' || cnpjValue === '' || cargaHoraria === '' || currentCertificateObj === undefined || category.value === null) {
+        Alert.alert('Por favor, preencha todos os campos! 😢');
+        setLoading(false);
+        return;
+      } else {
+        handleSubmitForm();
+        handleClearForm();
+        setLoading(false);
+      }
+    }, 200);
 
-  }, [empresa, descricao, cnpjValue, cargaHoraria, currentCertificateObj , category]);
+  }, [empresa, descricao, cnpjValue, cargaHoraria, currentCertificateObj, category]);
 
   
   const handleSubmitForm = useCallback(async() => {
@@ -184,10 +194,14 @@ const Register: React.FC = () => {
         }
       });
 
+      Alert.alert('Atividade enviada com sucesso! 🎓💪🏻🥳🎉');
       console.log(response.data);
     } catch (error: any) {
       console.log('erro ao submeter atividade!!!!!!!!!!!!!!!!!!!!!!!!!!');
       console.log(error.response);
+    }
+    finally {
+      setLoading(false);
     }
   }, [user, empresa, descricao, cnpjValue, cargaHoraria, currentCertificateObj, category.value]);
     
@@ -200,7 +214,7 @@ const Register: React.FC = () => {
         <Form>
           <Fields>
             <FormControl>
-              <Input placeholder="Descrição" onChangeText={(text) => setDescricao(text)} />
+              <Input placeholder="Descrição" value={descricao} onChangeText={(text) => setDescricao(text)} clearButtonMode="always" />
             </FormControl>
             <FormControl>
               <InputSelect title={category.display} onPress={handleOpenSelectCategoryModal} />
@@ -223,7 +237,7 @@ const Register: React.FC = () => {
               <Input placeholder="Empresa/Instituição" value={empresa} editable={false} disabled />
             </FormControl>
             <FormControl>
-              <Input placeholder="Carga horária (horas)" onChangeText={(text) => setCargaHoraria(text)} keyboardType="number-pad" />
+              <Input placeholder="Carga horária (horas)" value={cargaHoraria} onChangeText={(text) => setCargaHoraria(text)} keyboardType="number-pad" clearButtonMode="always" />
             </FormControl>
             <FormControl>
               <InputDropZone onPress={handleOpenMenu} icon={attached ? 'file' : 'camera'} title={attached ? truncateStrings(attachedName, 60) : ''}>
