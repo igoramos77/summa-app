@@ -24,11 +24,23 @@ export interface IPhotoCameraProps {
 
 import { Container, Header, Title, Form, FormControl, Fields, TitleHeader, CloseModalButton, ImageCertificate } from './styles';
 import axios from 'axios';
+import { useIsFocused } from '@react-navigation/native';
+import api from '../../services/api';
+import { useAuth } from '../../hooks/auth';
+
+import convertBlobToBase64 from '../../utils/base64toImage';
 
 const Register: React.FC = () => {
+  const { user } = useAuth();
+  // This hook returns `true` if the screen is focused, `false` otherwise
+  const isFocused = useIsFocused();
 
+  const [descricao, setDescricao] = useState('');
+  
   const [empresa, setEmpresa] = useState('');
   const [cnpjValue, setCnpjValue] = useState('');
+
+  const [cargaHoraria, setCargaHoraria] = useState('');
   
   const [cnpjIsFull, setCnpjIsFull] = useState(false);
   const [cnpjIsValid, setCnpjIsValid] = useState(false);
@@ -38,9 +50,10 @@ const Register: React.FC = () => {
   const [attachedName, setAttachedName] = useState('');
 
   const [isOpen, setIsOpen] = useState(false);
+  const [currentCertificateObj, setCurrentCertificateObj] = React.useState<any>();
   const [currentPhoto, setCurrentPhoto] = useState<IPhotoCameraProps>({} as IPhotoCameraProps);
 
-  const [lastCertificateImg, setLastCertificateImg] = useState('');
+  const [lastCertificateImg, setLastCertificateImg] = useState<any>();
 
   const [category, setCategory] = useState({
     value: Number,
@@ -68,6 +81,7 @@ const Register: React.FC = () => {
       console.log(result);
       setAttached(true);
       setAttachedName(result.name);
+      setCurrentCertificateObj(result);
     } else {
       console.log(result);
       console.log('Não foi possível anexar o pdf');
@@ -94,6 +108,29 @@ const Register: React.FC = () => {
     }
   );
 
+  const handleCleanForm = useCallback(() => {
+    //limpa a img do storage
+    const removeImageDataFromStorage = async () => {
+      console.log('entrou aqui!');
+      try {
+        await AsyncStorage.removeItem('@summaLastCertificate')
+        console.log('img storage removed!');
+
+        // seta o valor do stado da ultima img para null/empty
+        setLastCertificateImg('');
+        setDescricao('');
+        setAttached(false);
+        setAttachedName('');
+      } catch(e) {
+        // error reading value
+        console.log(e);
+      }
+    }
+    //chama a funcao acima
+    removeImageDataFromStorage();
+
+  }, []);
+
   useEffect(() => {
     if(cnpjIsFull) {
       async function loadData() {
@@ -115,23 +152,71 @@ const Register: React.FC = () => {
     }
   }, [cnpjIsFull]);
 
-  const getImageData = async () => {
-    //console.log('entrou');
+  const getImageData = useCallback(async() => {
     try {
-      const value = await AsyncStorage.getItem('@summaLastCertificate')
+      const value = await AsyncStorage.getItem('@summaLastCertificate');
       if(value !== null) {
         // value previously stored
-        setLastCertificateImg(value);
+        setLastCertificateImg(JSON.parse(value));
+        console.log('img:::::', value)
+      } else {
+        console.log('n entrou');
       }
     } catch(e) {
       // error reading value
       console.log(e);
     }
-  }
+  }, []);
 
   useEffect(() => {
     getImageData();
   }, [getImageData]);
+
+  useEffect(() => {
+    if (isFocused) {
+      alert('entrou na tela de cadastro');
+      
+    } else {
+      alert('saiu: limpar todos os dados do form');
+      handleCleanForm();
+    }
+  }, [isFocused, handleCleanForm]);
+
+  
+  const handleSubmitForm = useCallback(async() => {
+    const ext = currentCertificateObj.uri.split('.')[1];
+    const final = {...currentCertificateObj, name: 'file.' + ext} 
+    console.log(final);
+    console.log('submit form:');
+    console.log(final)
+
+    const formdata = new FormData();
+    formdata.append("descricao", descricao);
+    formdata.append("empresa", empresa);
+    formdata.append("cnpj", cnpjValue);
+    formdata.append("carga_horaria_informada", cargaHoraria);
+    formdata.append("carga_horaria_integralizada", '');
+    formdata.append("justificativa", '');
+    formdata.append("certificado", final);
+    formdata.append("status", 'em_validação');
+    formdata.append("is_active", 'true');
+    formdata.append("usuario", String(user.id));
+    formdata.append("curso", String(user.curso));
+    formdata.append("categoria", String(category.value));
+
+    try {
+      const response = await api.post('/api/v1/atividades-complementares/', formdata, {
+        headers: {
+          "Content-Type": "multipart/form-data;",
+        }
+      });
+
+      console.log(response.data);
+    } catch (error: any) {
+      console.log('erro ao submeter atividade!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      console.log(error.response);
+    }
+  }, [user, empresa, descricao, cnpjValue, cargaHoraria, currentCertificateObj, category.value]);
     
   return (
     <Container>
@@ -142,7 +227,7 @@ const Register: React.FC = () => {
         <Form>
           <Fields>
             <FormControl>
-              <Input placeholder="Descrição" />
+              <Input placeholder="Descrição" onChangeText={(text) => setDescricao(text)} />
             </FormControl>
             <FormControl>
               <InputSelect title={category.display} onPress={handleOpenSelectCategoryModal} />
@@ -156,8 +241,8 @@ const Register: React.FC = () => {
                 keyboardType="number-pad"
                 maxLength={18} //cnpj length with points
                 maskCnpj 
-                editable={(cnpjIsFull && cnpjIsValid && cnpjValue.length ===18 )? false : true}
-                disabled={(cnpjIsFull && cnpjIsValid && cnpjValue.length ===18 )? true : false}
+                editable={(cnpjIsFull && cnpjIsValid && cnpjValue.length ===18) ? false : true}
+                disabled={(cnpjIsFull && cnpjIsValid && cnpjValue.length ===18) ? true : false}
               />
               {cnpjIsValid && cnpjIsFull && <Feather size={24} color="#36b877" name="check" style={{ position: 'absolute', zIndex: 99999, right: 16 }} />}
             </FormControl>
@@ -165,17 +250,20 @@ const Register: React.FC = () => {
               <Input placeholder="Empresa/Instituição" value={empresa} editable={false} disabled />
             </FormControl>
             <FormControl>
-              <Input placeholder="Carga horária (horas)" keyboardType="number-pad" />
+              <Input placeholder="Carga horária (horas)" onChangeText={(text) => setCargaHoraria(text)} keyboardType="number-pad" />
             </FormControl>
             <FormControl>
-              <Text>uri :::::: {currentPhoto.uri}</Text>
               <InputDropZone onPress={handleOpenMenu} icon={attached ? 'file' : 'camera'} title={attached ? truncateStrings(attachedName, 60) : ''}>
-                {lastCertificateImg && <ImageCertificate source={{ uri: lastCertificateImg }} />}
+                {currentCertificateObj && currentCertificateObj.uri.split('.')[1] !== 'pdf' && (
+                  <ImageCertificate source={{ uri: currentCertificateObj.uri }} />)
+                }
               </InputDropZone>
             </FormControl>
           </Fields>
 
-          <Button title="Enviar certificado para análise!" background="primary" />
+          <FormControl>
+            <Button title="Enviar atividade para análise!" background="primary" onPress={handleSubmitForm} />
+          </FormControl>
         </Form>
       </KeyboardAwareScrollView>
 
@@ -194,7 +282,7 @@ const Register: React.FC = () => {
           <TitleHeader>Anexar certificado</TitleHeader>
         </Header>
         <CloseModalButton onPress={() => {setIsOpen(false)}}><Feather size={22} color="#fff" name="x" /></CloseModalButton>
-        <Camera setIsOpen={setIsOpen} />
+        <Camera setIsOpen={setIsOpen} setCurrentCertificateObj={setCurrentCertificateObj} />
       </Modal>}
     </Container>
   );

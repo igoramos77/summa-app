@@ -10,9 +10,10 @@ let camera: Camera;
 
 interface IAppProps {
   setIsOpen(value: boolean): any;
+  setCurrentCertificateObj(value: any): any;
 }
 
-export default function App({setIsOpen}: IAppProps) {
+export default function App({setIsOpen, setCurrentCertificateObj}: IAppProps) {
   const [startCamera, setStartCamera] = React.useState(false);
   const [previewVisible, setPreviewVisible] = React.useState(false);
   const [capturedImage, setCapturedImage] = React.useState<any>(null);
@@ -79,7 +80,7 @@ export default function App({setIsOpen}: IAppProps) {
           }}
         >
           {previewVisible && capturedImage ? (
-            <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture} setIsOpen={setIsOpen} />
+            <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture} setIsOpen={setIsOpen} setCurrentCertificateObj={setCurrentCertificateObj} />
           ) : (
             <Camera
               type={cameraType}
@@ -200,15 +201,20 @@ const styles = StyleSheet.create({
   }
 })
 
-const CameraPreview = ({photo, retakePicture, savePhoto, setIsOpen, setCurrentPhoto}: any) => {
+const CameraPreview = ({photo, retakePicture, savePhoto, setIsOpen, setCurrentCertificateObj}: any) => {
   console.log('photo: ', photo);
 
-  const storeImageData = async (photo: string) => {
+  const storeImageData = async (photo: any) => {
     try {
-      await AsyncStorage.setItem('@summaLastCertificate', photo);
+      await AsyncStorage.setItem('@summaLastCertificate', JSON.stringify(photo));
+      console.log('=============================================');
+      console.log('=============================================');
+      console.log('=============================================');
+      console.log('=============================================');
+      console.log(await AsyncStorage.getItem('@summaLastCertificate'));
       console.log('Last uri certificate save in storage!');
       setIsOpen(false);
-      setCurrentPhoto(photo);
+      setCurrentCertificateObj(photo)
     } catch (e) {
       // saving error
       console.log(e);
@@ -227,7 +233,7 @@ const CameraPreview = ({photo, retakePicture, savePhoto, setIsOpen, setCurrentPh
                 Cancelar
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {console.log('photo>>>> ', photo.uri); storeImageData(photo.uri) }} style={{ width: '50%', height: 40, alignItems: 'center'}}>
+            <TouchableOpacity onPress={() => {console.log('photo>>>> ', photo.uri); storeImageData(photo); }} style={{ width: '50%', height: 40, alignItems: 'center'}}>
               <Text style={{ color: '#fff', fontSize: 20 }}>
                 Usar foto
               </Text>
