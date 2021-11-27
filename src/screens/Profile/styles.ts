@@ -50,7 +50,7 @@ export const FormContainer = styled.View`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 80%;
+  width: 88%;
   padding: 0 16px 16px 16px;
   background: #fff;
   border-radius: 5px;
@@ -75,3 +75,11 @@ export const Label = styled.Text`
   margin: 4px 8px 8px 8px;
 `;
 
+export const Footer = styled.Text`
+  font-size: 10px;
+  color: ${props => props.theme.colors.text}90;
+  display: flex;
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+`;

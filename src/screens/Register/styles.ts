@@ -4,6 +4,7 @@ import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 
 export const Container = styled.View`
   background: ${props => props.theme.colors.background};
+  background: #EDEDED;
   height: 100%;
 `;
 

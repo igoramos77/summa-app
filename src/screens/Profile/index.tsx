@@ -2,7 +2,7 @@ import React from 'react';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { Container, Header, H1, H2, Strong, BigContainer, FormControl, FormContainer, BigAvatar, Form, Label } from './styles';
+import { Container, Header, H1, H2, Strong, BigContainer, FormControl, FormContainer, BigAvatar, Form, Label, Footer } from './styles';
 import { useAuth } from '../../hooks/auth';
 import Input from '../../Componets/Forms/Input';
 import Button from '../../Componets/Forms/Button';
@@ -49,6 +49,8 @@ const Profile: React.FC = () => {
           </Form>
         </FormContainer>
       </BigContainer>
+
+      <Footer>Summa 2021 - Todos os direitos reservasos</Footer>
     </Container>
   );
 }
